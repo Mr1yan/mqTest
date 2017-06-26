@@ -42,13 +42,13 @@
        </bean>
 
        <!-- 配置自定义监听：MessageListener -->
-      <bean id="msgQueueMessageListener" class="mqTest.activeMQ.spring3.MsgQueueMessageListener"></bean>
+      <bean id="listener" class="mqTest.activeMQ.spring3.Listener"></bean>
 
        <!-- 将连接工厂、目标对了、自定义监听注入jms模板 -->
        <bean  class="org.springframework.jms.listener.DefaultMessageListenerContainer">
               <property name="connectionFactory" ref="connectionFactory" />
               <property name="destination" ref="msgQueue" />
-              <property name="messageListener" ref="msgQueueMessageListener" />
+              <property name="messageListener" ref="listener" />
        </bean>
 
 </beans>
