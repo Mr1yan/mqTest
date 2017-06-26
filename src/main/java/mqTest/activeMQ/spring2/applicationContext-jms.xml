@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+     destroy-method="stop">
+	     <property name="connectionFactory">
+		    <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+		      <property name="brokerURL">
+		          <value>tcp://127.0.0.1:61616</value>
+		      </property>
+		    </bean>
+		 </property>   
+	    <property name="maxConnections" value="100"></property>
+    </bean>
+    <!-- 声明ActiveMQ消息目标,目标可以是一个队列，也可以是一个主题ActiveMQTopic-->
+    <bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
+        <!-- 设置消息队列的名字 -->
+        <constructor-arg index="0" value="mqTest.activeMQ.spring2" />
+    </bean>
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory">
+          <ref local='jmsFactory'/>
+        </property>
+        <property name="defaultDestination" ref="destination"/>
+        <property name="receiveTimeout" value="600"/>
+    </bean>
+     <bean id="sender" class="mqTest.activeMQ.spring2.Sender">
+        <property name="jmsTemplate" ref="jmsTemplate"></property>
+    </bean>
+    <bean id="receiver" class="mqTest.activeMQ.spring2.Receiver">
+        <property name="jmsTemplate" ref="jmsTemplate"></property>
+    </bean>
+
+</beans>
